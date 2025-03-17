@@ -7,6 +7,7 @@
         "options": {
           "format": "json",
           "temperature": 0.7,
+          "system": "Eres un asistente amable y útil. Respondes siempre en español de manera clara y concisa.",
           "responseFormat": {
             "type": "json_object",
             "schema": {
@@ -17,9 +18,11 @@
                   "enum": ["Final Answer"]
                 },
                 "response": {
-                  "type": "string"
+                  "type": "string",
+                  "description": "La respuesta directa en español a la pregunta del usuario"
                 }
-              }
+              },
+              "required": ["action", "response"]
             }
           }
         }
@@ -60,12 +63,14 @@
         "options": {
           "outputParser": {
             "type": "string",
-            "template": "{{output}}"
+            "template": "{{$json.response}}"
           },
           "memory": {
             "type": "buffer",
-            "memoryKey": "chat_history"
-          }
+            "memoryKey": "chat_history",
+            "returnMessages": true
+          },
+          "systemMessage": "Eres un asistente virtual amable que siempre responde en español."
         }
       },
       "id": "df655618-4e21-45af-b962-606a123b3339",

@@ -64,19 +64,19 @@ services:
               count: 1
               capabilities: [compute, utility]
               options:
-                memory: 4500M          # Ajustado
+                memory: 5000M          # Ajustado
         limits:
           memory: 8G              # Reducido ya que solo usa 1.2GB
           cpus: '4'               # Ajustado para mejor rendimiento
     environment:
-      - NVIDIA_VISIBLE_DEVICES=0
+      - NVIDIA_VISIBLE_DEVICES=all
       - CUDA_VISIBLE_DEVICES=0
-      - OLLAMA_GPU_MEMORY=4500        # Ajustado para dejar margen
-      - OLLAMA_GPU_LAYERS=40          # Aumentado para usar más GPU
-      - OLLAMA_BATCH_SIZE=2048        # Aumentado para mejor rendimiento
-      - OLLAMA_NUM_THREAD=8           # Aumentado para más paralelismo
+      - OLLAMA_GPU_MEMORY=5000        # Ajustado para dejar margen
+      - OLLAMA_GPU_LAYERS=45          # Aumentado para usar más GPU
+      - OLLAMA_BATCH_SIZE=4096        # Aumentado para mejor rendimiento
+      - OLLAMA_NUM_THREAD=12           # Aumentado para más paralelismo
       - OLLAMA_FLASH_ATTENTION=true
-      - OLLAMA_CONCURRENT_REQUESTS=4   # Aumentado
+      - OLLAMA_CONCURRENT_REQUESTS=6   # Aumentado
       - OLLAMA_CONTEXT_LENGTH=4096
       - OLLAMA_GPU_SPLIT_SIZE=256     # Aumentado
       - OLLAMA_F16=true               # Nuevo: usar precisión FP16
