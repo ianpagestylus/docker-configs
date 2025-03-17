@@ -1,0 +1,73 @@
+{
+  "nodes": [
+    {
+      "id": "1",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [ -200, 300 ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "ollama",
+        "responseMode": "responseNode",
+        "options": {
+          "responseHeaders": {}
+        }
+      }
+    },
+    {
+      "id": "2",
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [ 0, 300 ],
+      "parameters": {
+        "authentication": "none",
+        "url": "http://ollama:11434/api/generate",
+        "method": "POST",
+        "responseFormat": "json",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n    \"model\": \"llama3:8b\",\n    \"prompt\": \"{{ $json.body.query }}\",\n    \"stream\": false\n}"
+      }
+    },
+    {
+      "id": "3",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [ 200, 300 ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n    \"status\": \"success\",\n    \"query\": \"{{ $node[\\\"Webhook\\\"].json[\\\"body\\\"][\\\"query\\\"] }}\",\n    \"response\": \"{{ $node[\\\"HTTP Request\\\"].json[\\\"response\\\"] }}\",\n    \"model\": \"llama3:8b\",\n    \"timestamp\": \"{{ $now.toISO() }}\"\n}",
+        "options": {
+          "responseCode": 200
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

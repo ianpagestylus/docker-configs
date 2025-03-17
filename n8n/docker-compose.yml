@@ -1,0 +1,76 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: postgres
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./postgres/init-scripts:/docker-entrypoint-initdb.d:ro
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
+
+  n8n:
+    build: .
+    image: customizedn8n  # Imagen personalizada con el nodo de LangChain
+    container_name: n8n
+    environment:
+      - DB_TYPE=${DB_TYPE}
+      - DB_POSTGRESDB_HOST=${DB_POSTGRESDB_HOST}
+      - DB_POSTGRESDB_PORT=${DB_POSTGRESDB_PORT}
+      - DB_POSTGRESDB_DATABASE=${DB_POSTGRESDB_DATABASE}
+      - DB_POSTGRESDB_USER=${DB_POSTGRESDB_USER}
+      - DB_POSTGRESDB_PASSWORD=${DB_POSTGRESDB_PASSWORD}
+      - N8N_DIAGNOSTICS_ENABLED=${N8N_DIAGNOSTICS_ENABLED}
+      - OLLAMA_HOST=${OLLAMA_HOST}
+      - N8N_WEBHOOK_TUNNEL_URL=${N8N_WEBHOOK_TUNNEL_URL}
+      - N8N_DEFAULT_EXECUTION_MODE=${N8N_DEFAULT_EXECUTION_MODE}
+      - N8N_USER=n8n
+      - N8N_UID=1000
+      - N8N_GID=1000
+    ports:
+      - "${N8N_PORT}:5678"
+    volumes:
+      - n8n_data:/home/node/.n8n
+      - n8n_logs:/var/log/n8n
+      - n8n_config:/home/node/config
+    networks:
+      - internal
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    ports:
+      - "${OLLAMA_PORT}:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+      - ollama_models:/root/.ollama/models
+    networks:
+      - internal
+    restart: unless-stopped
+
+networks:
+  internal:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  postgres_init:
+  n8n_data:
+  n8n_logs:
+  n8n_config:
+  ollama_data:
+  ollama_models:

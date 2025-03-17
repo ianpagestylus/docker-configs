@@ -1,0 +1,21 @@
+# Ignorar datos persistentes de PostgreSQL
+postgres/data/
+postgres/init-scripts/*.sql~
+
+# Ignorar datos persistentes de n8n
+n8n/data/
+n8n/logs/
+n8n/config/
+
+# Ignorar datos persistentes de Ollama
+ollama/data/
+ollama/models/
+
+# Ignorar logs y archivos temporales
+*.log
+*.tmp
+*.swp
+
+# Ignorar archivos de configuración específicos del sistema
+.DS_Store
+Thumbs.db

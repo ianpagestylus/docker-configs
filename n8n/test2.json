@@ -1,0 +1,95 @@
+{
+    "name": "test2",
+    "nodes": [
+      {
+        "parameters": {
+          "httpMethod": "POST",
+          "path": "test2",
+          "responseMode": "responseNode",
+          "options": {}
+        },
+        "id": "dd877a8c-765d-434d-a22f-7200146129bb",
+        "name": "Webhook",
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 1.1,
+        "position": [
+          220,
+          240
+        ],
+        "webhookId": "22092714-469f-4975-81ad-97a56b305f35"
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "http://ollama:11434/api/generate",
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "{\n  \"model\": \"llama3:8b\",\n  \"prompt\": \"¿Cuál es la capital de Francia?\",\n  \"stream\": false\n}\n\n",
+          "options": {}
+        },
+        "id": "433cdcb5-7dba-4e44-b410-6377971031e0",
+        "name": "HTTP Request",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.1,
+        "position": [
+          480,
+          240
+        ]
+      },
+      {
+        "parameters": {
+          "respondWith": "json",
+          "responseBody": "{\n  \"response\": \"{{$node['HTTP Request'].json['response'] || $node['HTTP Request'].json['text']}}\"\n}\n",
+          "options": {}
+        },
+        "id": "61de5f97-d9e0-45a9-9eba-03e475fe444e",
+        "name": "Respond to Webhook",
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1,
+        "position": [
+          800,
+          420
+        ]
+      }
+    ],
+    "pinData": {},
+    "connections": {
+      "Webhook": {
+        "main": [
+          [
+            {
+              "node": "HTTP Request",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "HTTP Request": {
+        "main": [
+          [
+            {
+              "node": "Respond to Webhook",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "active": true,
+    "settings": {
+      "executionOrder": "v1",
+      "timezone": "America/Santiago",
+      "saveManualExecutions": true,
+      "callerPolicy": "workflowsFromSameOwner",
+      "errorWorkflow": "iCmkyhLZFI7Q5JzP"
+    },
+    "versionId": "9911e0df-768f-42fe-a538-3ee90cae72d6",
+    "meta": {
+      "templateCredsSetupCompleted": true,
+      "instanceId": "1f8cd4d44021adcb867e4a7980e05b38d46500dbf2037a2e914084d48850003e"
+    },
+    "id": "iCmkyhLZFI7Q5JzP",
+    "tags": []
+  }
