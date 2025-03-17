@@ -261,7 +261,8 @@ Si necesitas otro modelo o tienes algún problema, dime y lo solucionamos. 💪
 
 
 
-
+# En otra terminal
+docker stats ollama
 
 
 
