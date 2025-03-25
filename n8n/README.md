@@ -119,10 +119,3 @@ Invoke-RestMethod "http://localhost:11434/api/generate" -Method Post -Body $body
 
 ## 📄 Licencia
 📝 MIT License
-
-## 👥 Contribuir
-1. 🍴 Fork
-2. 🌿 Nueva rama
-3. 📝 Commit
-4. 🚀 Push
-5. ✅ Pull Request
