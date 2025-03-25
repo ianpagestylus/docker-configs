@@ -257,9 +257,6 @@ docker exec -it ollama ollama run llama3:8b
 📌 Esto abrirá una consola interactiva donde puedes escribir preguntas y recibir respuestas del modelo.
 
 🚀 ¡Listo! Ahora tienes el modelo Llama 3.3 funcionando en Docker con Ollama. 🔥
-Si necesitas otro modelo o tienes algún problema, dime y lo solucionamos. 💪
-
-
 
 # En otra terminal
 docker stats ollama
