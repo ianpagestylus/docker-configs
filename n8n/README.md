@@ -1,266 +1,128 @@
-README.md - n8n Docker Setup
-md
-Copiar
-Editar
-# 🚀 Configuración de n8n con Docker Compose
+# 🚀 N8N + Ollama + PostgreSQL: Stack de Automatización con IA Local
 
-Este directorio contiene los archivos necesarios para desplegar **n8n**, una base de datos **PostgreSQL** y el servicio **Ollama** (para modelos de IA), utilizando **Docker Compose**.
+## 📑 Índice
+- [🎯 Descripción](#-descripción)
+- [⚡ Características](#-características)
+- [📋 Requisitos](#-requisitos)
+- [🛠️ Instalación](#️-instalación)
+- [🤖 Modelos de IA](#-modelos-de-ia)
+- [📊 Monitoreo](#-monitoreo)
+- [🔌 Endpoints](#-endpoints)
+- [📝 Ejemplos](#-ejemplos)
+- [🛟 Solución de Problemas](#-solución-de-problemas)
 
-## 📂 Estructura de Carpetas y Archivos
+## 🎯 Descripción
+Sistema integrado de automatización con IA local que combina:
+- 🔄 **n8n**: Plataforma de automatización
+- 🧠 **Ollama**: Servidor de IA local
+- 💾 **PostgreSQL**: Base de datos persistente
 
-tree /F n8n
+## ⚡ Características
+- 🏃‍♂️ **IA Local**: 100% en tu máquina
+- 🔒 **Privacidad**: Sin dependencias cloud
+- 🎮 **GPU Optimizada**: Soporte NVIDIA
+- 💾 **Persistencia**: PostgreSQL
+- 🤖 **Automatización**: n8n + IA
 
-csharp
-Copiar
-Editar
-n8n/
-│── docker-compose.yml         # Configuración principal de Docker Compose
-│── .env                       # Variables de entorno (credenciales, puertos)
-│── postgres/
-│   ├── data/                  # Datos persistentes de PostgreSQL
-│   ├── init-scripts/
-│   │   ├── init-db.sql        # Script SQL para inicialización de la DB
-│── n8n/
-│   ├── data/                  # Flujos y configuraciones persistentes de n8n
-│   ├── logs/                  # Logs de ejecución de n8n
-│── ollama/
-│   ├── models/                # Modelos de IA descargados por Ollama
-│   ├── data/                  # Configuración y almacenamiento de Ollama
-│── README.md                  # Documentación del proyecto
-md
-Copiar
-Editar
-## 🛠 Requisitos previos
-Antes de ejecutar los contenedores, asegúrate de tener instalado:
-- **Docker** → [Descargar Docker](https://www.docker.com/get-started)
-- **Docker Compose** → (Incluido en Docker Desktop)
-- **Opcional:** `docker-compose.override.yml` para configuraciones personalizadas.
+## 📋 Requisitos
+- 🐳 Docker y Docker Compose
+- 🎮 NVIDIA GPU (CUDA)
+- 💻 8GB+ RAM
+- 💽 20GB+ espacio
 
-## 🚀 Cómo ejecutar los servicios
-Ejecuta los siguientes comandos dentro del directorio `n8n/`:
+## 🛠️ Instalación
 
-### 1️⃣ **Iniciar los contenedores**
-```sh
-docker-compose up -d
-2️⃣ Verificar que los contenedores están corriendo
-sh
-Copiar
-Editar
-docker ps
-3️⃣ Acceder a la interfaz de n8n
-Abre un navegador y ve a:
-🔗 http://localhost:5678
-
-4️⃣ Conectar a la base de datos PostgreSQL
-Si necesitas conectarte a PostgreSQL, usa los siguientes datos:
-
-Host: postgres
-Usuario: n8n_user
-Contraseña: n8n_pass
-Base de datos: n8n_db
-Puerto: 5432
-sh
-Copiar
-Editar
-docker exec -it postgres psql -U n8n_user -d n8n_db
-📌 Configuración de .env
-Puedes definir variables de entorno en un archivo .env para ocultar credenciales:
-
-ini
-Copiar
-Editar
-POSTGRES_USER=n8n_user
-POSTGRES_PASSWORD=n8n_pass
-POSTGRES_DB=n8n_db
-N8N_DIAGNOSTICS_ENABLED=false
-OLLAMA_HOST=ollama:11434
-📜 Personalización y Configuración Adicional
-🔹 Agregar Scripts de Inicialización a PostgreSQL
-Si necesitas ejecutar SQL al iniciar PostgreSQL, colócalo en:
-
-sh
-Copiar
-Editar
-postgres/init-scripts/init-db.sql
-Ejemplo:
-
-sql
-Copiar
-Editar
-CREATE TABLE IF NOT EXISTS users (
-    id SERIAL PRIMARY KEY,
-    name TEXT NOT NULL,
-    email TEXT UNIQUE NOT NULL
-);
-🔹 Ver logs de n8n
-Si necesitas revisar los registros de ejecución de n8n:
-
-sh
-Copiar
-Editar
-docker logs -f n8n
-🔹 Detener y eliminar los contenedores
-Para apagar los contenedores y limpiar volúmenes:
-
-sh
-Copiar
-Editar
-docker-compose down -v
-🛠 Solución de Problemas
-❌ Error: "Database is not ready"
-Si PostgreSQL tarda en iniciarse, prueba:
-
-sh
-Copiar
-Editar
-docker-compose restart n8n
-❌ Error: Puerto en uso
-Si el puerto 5678 está en uso, puedes cambiarlo en docker-compose.yml:
-
-yaml
-Copiar
-Editar
-    ports:
-      - "8080:5678"
-Luego, accede a http://localhost:8080.
-
-📌 Recursos Adicionales
-Documentación Oficial de n8n: https://docs.n8n.io/
-Repositorio GitHub de n8n: https://github.com/n8n-io/n8n
-✍ Autor: [Tu Nombre]
-📅 Última actualización: $(date +'%Y-%m-%d')
-
-yaml
-Copiar
-Editar
-
----
-
-### **✅ Beneficios de este README.md**
-✔ **Explica claramente la estructura del proyecto**  
-✔ **Instrucciones paso a paso para levantar los contenedores**  
-✔ **Configuración de `.env` y PostgreSQL**  
-✔ **Solución de problemas comunes**  
-✔ **Documentación y enlaces útiles**  
-
-🔹 **¿Quieres agregar algo más, como un script para automatizar el proceso?** 🚀
-
-# Configuración de N8N con Ollama y PostgreSQL
-
-## Preparación
-Antes de iniciar, crear los siguientes directorios:
+### 📂 Estructura de Directorios
 ```bash
-mkdir -p postgres/data postgres/init-scripts n8n/data n8n/logs n8n/config ollama/data ollama/models
+mkdir -p postgres/{data,init-scripts} n8n/{data,logs,config} ollama/{data,models}
 ```
 
-## Comandos básicos
-
-Iniciar los servicios:
+### 🔧 Configuración
 ```bash
-docker-compose up -d
+cp .env.example .env
+# Editar .env según necesidades
 ```
 
-Verificar el estado:
+### 🚀 Iniciar Servicios
 ```bash
-docker-compose ps
+docker compose up -d
 ```
 
-Ver logs:
+### ✅ Verificación
 ```bash
-docker-compose logs
+./check-connectivity.ps1
 ```
 
-Detener servicios:
+## 🤖 Modelos de IA
+
+### 📦 Modelos Disponibles
+| Modelo | VRAM | Uso |
+|--------|------|-----|
+| 🦙 llama3:8b | 4.7GB | General |
+| 🌪️ mistral | 4GB | Cálculos |
+| 🦙 llama2 | 4GB | General |
+| 🗣️ neural-chat | 4GB | Chat |
+
+### 📥 Instalación de Modelos
 ```bash
-docker-compose down
+docker compose exec ollama ollama pull llama3:8b
 ```
 
-La configuración debería funcionar correctamente ya que:
-- Las redes están bien configuradas (network: internal)
-- Los puertos están correctamente mapeados
-- Las dependencias están bien establecidas
-- Los volúmenes están correctamente definidos
-- Las variables de entorno están bien configuradas
+## 📊 Monitoreo
 
-Para asegurarte de que todo funcione, puedes validar:
-- n8n estará disponible en: `http://localhost:5678`
-- Ollama estará disponible en: `http://localhost:11434`
-- PostgreSQL estará accesible internamente para n8n
+### 🔍 Scripts Disponibles
+- 🎮 `check-gpu.ps1`: Estado GPU
+- 📈 `monitor-gpu.ps1`: Uso GPU
+- 🤖 `monitor-ollama.ps1`: Rendimiento Ollama
+- 🔄 `monitor-services.ps1`: Estado servicios
 
-No es necesario hacer cambios en los archivos actuales, pero te sugiero crear un nuevo archivo para documentar los comandos básicos:
+## 🔌 Endpoints
 
-### [README.md](file:///d%3A/cursos/docker-configs/n8n/README.md)
+### 🌐 Servicios Web
+- 🔄 **n8n**: `http://localhost:5678`
+  - 👤 Usuario: `admin`
+  - 🔑 Password: `admin123`
+- 🤖 **Ollama**: `http://localhost:11434`
+- 💾 **PostgreSQL**: `localhost:5432`
 
+## 📝 Ejemplos
 
-docker exec -it ollama ollama list
-
-
+### 🤖 Chatbot Básico
+```powershell
 $body = @{
     model = "llama3:8b"
-    prompt = "Resume en 5 líneas la historia de la computación."
+    prompt = "¡Hola! ¿Cómo estás?"
     stream = $false
-} | ConvertTo-Json -Depth 10
+} | ConvertTo-Json
 
-Invoke-RestMethod -Uri "http://localhost:11434/api/generate" -Method Post -Body $body -ContentType "application/json" | ConvertTo-Json -Depth 10
+Invoke-RestMethod "http://localhost:11434/api/generate" -Method Post -Body $body -ContentType "application/json"
+```
 
+## 🛟 Solución de Problemas
 
-docker exec -it ollama ollama pull llama3:8b
+### 🔄 Reinicio de Servicios
+```bash
+./reset-ollama.ps1  # Problemas con Ollama
+./reset-n8n.ps1     # Problemas con n8n
+```
 
-Para descargar el modelo Llama 3.3 en el contenedor de Ollama dentro de Docker, ejecuta el siguiente comando en PowerShell o CMD:
+### 🔍 Diagnóstico
+```bash
+./check-connectivity.ps1  # Verificar conexiones
+./check-gpu.ps1          # Verificar GPU
+```
 
-sh
-Copiar
-Editar
-docker exec -it ollama ollama pull llama3:8b
-📌 Opciones de modelos disponibles
-Si necesitas un modelo más grande o diferente, puedes usar:
+## 📚 Referencias
+- 📖 [Docs n8n](https://docs.n8n.io/)
+- 🤖 [Docs Ollama](https://ollama.ai/docs)
+- 💾 [Docs PostgreSQL](https://www.postgresql.org/docs/)
 
-Llama 3.3 (8B) → Requiere ~4.7GB de RAM
+## 📄 Licencia
+📝 MIT License
 
-sh
-Copiar
-Editar
-docker exec -it ollama ollama pull llama3:8b
-Llama 3.3 (13B) → Requiere ~10GB de RAM
-
-sh
-Copiar
-Editar
-docker exec -it ollama ollama pull llama3:13b
-Llama 3.3 (33B) → Requiere ~32GB de RAM (⚠️ Puede ser demasiado pesado para tu máquina)
-
-sh
-Copiar
-Editar
-docker exec -it ollama ollama pull llama3:33b
-📌 Verificar que el modelo se haya descargado correctamente
-Una vez completada la descarga, verifica la lista de modelos disponibles con:
-
-sh
-Copiar
-Editar
-docker exec -it ollama ollama list
-Si todo está bien, deberías ver algo como:
-
-makefile
-Copiar
-Editar
-NAME        ID            SIZE     MODIFIED
-llama3:8b   abc123xyz     4.7GB    Just now
-📌 Probar el modelo descargado
-Para asegurarte de que funciona correctamente, prueba generando un texto con:
-
-sh
-Copiar
-Editar
-docker exec -it ollama ollama run llama3:8b
-📌 Esto abrirá una consola interactiva donde puedes escribir preguntas y recibir respuestas del modelo.
-
-🚀 ¡Listo! Ahora tienes el modelo Llama 3.3 funcionando en Docker con Ollama. 🔥
-
-# En otra terminal
-docker stats ollama
-
-
-
-
+## 👥 Contribuir
+1. 🍴 Fork
+2. 🌿 Nueva rama
+3. 📝 Commit
+4. 🚀 Push
+5. ✅ Pull Request
